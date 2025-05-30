@@ -23,7 +23,7 @@ export default function Loading() {
         </div>
 
         <div className="text-gray-400">
-          Credit to Octave
+          Credit to Octave — Further Developed by Me
         </div>
       </div>
     </div>

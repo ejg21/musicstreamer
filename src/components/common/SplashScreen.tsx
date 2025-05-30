@@ -57,7 +57,7 @@ export default function SplashScreen() {
           />
         </div>
 
-        <div className="text-gray-400">Credit to Octave</div>
+        <div className="text-gray-400">Credit to Octave - Further Developed by Me</div>
       </div>
     </div>
   );
