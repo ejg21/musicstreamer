@@ -5,17 +5,30 @@ import {
   storeTrackBlob,
   storeSetting
 } from "../managers/idbWrapper";
+
+// Import getFallbackUrl for use in getTrackUrl
+// (If getFallbackUrl is defined below, this import is safe for future refactor.)
 import audioElement from "../managers/audioManager";
 import { Track } from "../types/types";
 
 /* ─────────────────────────── URLs ──────────────────────────────── */
 export function getTrackUrl(id: string, q: string): string {
   switch (q) {
-    case "MAX":        return `https://deezer-worker.justvinixy.workers.dev/flac/?track=${id}`;
-    case "HIGH":       return `https://deezer-worker.justvinixy.workers.dev/lossless/?track=${id}`;
-    case "NORMAL":     return `https://deezer-worker.justvinixy.workers.dev/320/?track=${id}`;
-    case "DATA_SAVER": return `https://deezer-worker.justvinixy.workers.dev/128/?track=${id}`;
-    default:           return `https://deezer-worker.justvinixy.workers.dev/320/?track=${id}`;
+    case "MAX":
+      // return `https://deezer-worker.justvinixy.workers.dev/flac/?track=${id}`;
+      return getFallbackUrl(id);
+    case "HIGH":
+      // return `https://deezer-worker.justvinixy.workers.dev/lossless/?track=${id}`;
+      return getFallbackUrl(id);
+    case "NORMAL":
+      // return `https://deezer-worker.justvinixy.workers.dev/320/?track=${id}`;
+      return getFallbackUrl(id);
+    case "DATA_SAVER":
+      // return `https://deezer-worker.justvinixy.workers.dev/128/?track=${id}`;
+      return getFallbackUrl(id);
+    default:
+      // return `https://deezer-worker.justvinixy.workers.dev/320/?track=${id}`;
+      return getFallbackUrl(id);
   }
 }
 function getFallbackUrl(id: string): string {
@@ -358,3 +371,4 @@ async (
     setLoop
   };
 }
+
