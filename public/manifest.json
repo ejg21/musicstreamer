@@ -1,0 +1,93 @@
+{
+  "name": "Octave Streaming - Stream Your Favorite Tunes",
+  "short_name": "Octave",
+  "description": "Your ultimate music streaming companion",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
+  "splash_pages": null,
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "display_override": ["window-controls-overlay", "standalone"],
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["music", "entertainment", "streaming", "travel", "utilities"],
+  "lang": "en-US",
+  "media_control": "android-media-control",
+  "media_session": {
+    "actions": [
+      "play",
+      "pause",
+      "previoustrack",
+      "nexttrack",
+      "seekto",
+      "seekbackward",
+      "seekforward"
+    ],
+    "artwork": true
+  },
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "id": "OctaveGoldOfficial",
+  "icons": [
+    {
+      "src": "/images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "scope_extensions": [],
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "screenshots": [],
+  "edge_side_panel": {
+    "enabled": false
+  },
+  "file_handlers": {
+    "audio/*": {
+      "action": "/audio-handler"
+    }
+  },
+  "handle_links": {
+    "default": "chrome"
+  },
+  "shortcuts": [],
+  "widgets": []
+}
