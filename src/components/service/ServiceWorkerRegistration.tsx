@@ -7,7 +7,7 @@ const ServiceWorkerRegistration = () => {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/sw.js")
+        .register("/W/music/sw.js")
         .then((registration) => {
           console.log(
             "Service Worker registered with scope:",

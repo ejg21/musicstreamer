@@ -78,7 +78,7 @@ export const metadata: Metadata = {
       "Stream your favorite music for free, forever. High-quality streaming, no ads, unlimited music.",
     images: [
       {
-        url: "/images/OctaveBanner.png",
+        url: "/W/music/images/OctaveBanner.png",
         width: 1200,
         height: 630,
         alt: "Octave Streaming Banner",
@@ -91,37 +91,37 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Octave Streaming",
     description: "Your Ultimate Free Music Streaming Platform",
-    images: ["/images/OctaveBanner.png"],
+    images: ["/W/music/images/OctaveBanner.png"],
     creator: "@DebateMyRoomba",
     site: "@OctaveStreaming",
   },
 
   icons: {
     icon: [
-      { url: "/images/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/W/music/images/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/W/music/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       {
-        url: "/images/android-chrome-192x192.png",
+        url: "/W/music/images/android-chrome-192x192.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        url: "/images/android-chrome-512x512.png",
+        url: "/W/music/images/android-chrome-512x512.png",
         sizes: "512x512",
         type: "image/png",
       },
     ],
-    shortcut: "/images/favicon.ico",
-    apple: "/images/apple-touch-icon.png",
+    shortcut: "/W/music/images/favicon.ico",
+    apple: "/W/music/images/apple-touch-icon.png",
     other: [
       {
         rel: "mask-icon",
-        url: "/images/black_logo.png",
+        url: "/W/music/images/black_logo.png",
       },
     ],
   },
 
-  manifest: "/manifest.json",
+  manifest: "/W/music/manifest.json",
 
   applicationName: "Octave Streaming",
   appleWebApp: {
@@ -130,17 +130,17 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     startupImage: [
       {
-        url: "/images/black_logo.png",
+        url: "/W/music/images/black_logo.png",
         media:
           "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)",
       },
       {
-        url: "/images/black_logo.png",
+        url: "/W/music/images/black_logo.png",
         media:
           "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)",
       },
       {
-        url: "/images/black_logo.png",
+        url: "/W/music/images/black_logo.png",
         media:
           "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)",
       },
@@ -160,7 +160,7 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-capable": "yes",
     "application-name": "Octave",
     "msapplication-TileColor": "#000000",
-    "msapplication-config": "/browserconfig.xml",
+    "msapplication-config": "/W/music/browserconfig.xml",
     "theme-color": "#000000",
   },
 };
