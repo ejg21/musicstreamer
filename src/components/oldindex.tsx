@@ -255,7 +255,7 @@ export function Main() {
         if (!pls.some((pl) => pl.name === "Liked Songs")) {
           const likedPlaylist: Playlist = {
             name: "Liked Songs",
-            image: "/W/music/images/liked-songs.webp",
+            image: "/images/liked-songs.webp",
             tracks: [],
             pinned: true,
           };
@@ -426,7 +426,7 @@ export function Main() {
         if (!liked) {
           const newPL: Playlist = {
             name: "Liked Songs",
-            image: "/W/music/images/liked-songs.webp",
+            image: "/images/liked-songs.webp",
             tracks: [],
           };
           void storePlaylist(newPL);
@@ -558,10 +558,10 @@ export function Main() {
       },
       album: {
         title: track.album?.title || "Unknown Album",
-        cover_medium: track.album?.cover_medium || "/W/music/images/defaultPlaylistImage.png",
-        cover_small: track.album?.cover_small || "/W/music/images/defaultPlaylistImage.png",
-        cover_big: track.album?.cover_big || "/W/music/images/defaultPlaylistImage.png",
-        cover_xl: track.album?.cover_xl || "/W/music/images/defaultPlaylistImage.png",
+        cover_medium: track.album?.cover_medium || "/images/defaultPlaylistImage.png",
+        cover_small: track.album?.cover_small || "/images/defaultPlaylistImage.png",
+        cover_big: track.album?.cover_big || "/images/defaultPlaylistImage.png",
+        cover_xl: track.album?.cover_xl || "/images/defaultPlaylistImage.png",
       },
     };
   };
@@ -719,7 +719,7 @@ export function Main() {
       canvas.width = 256;
       canvas.height = 256;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return "/W/music/images/placeholder-image.png";
+      if (!ctx) return "/images/placeholder-image.png";
 
       const count = Math.min(4, urls.length);
       const size = 128; // quadrant size
@@ -738,7 +738,7 @@ export function Main() {
     if (!newPlaylistName) return;
     const pl: Playlist = {
       name: newPlaylistName,
-      image: newPlaylistImage || "/W/music/images/defaultPlaylistImage.png",
+      image: newPlaylistImage || "/images/defaultPlaylistImage.png",
       tracks: selectedTracksForNewPlaylist,
     };
     const updated = [...playlists, pl];
@@ -865,7 +865,7 @@ export function Main() {
         if (!playlists.some((p) => p.name === "Liked Songs")) {
           const newPL: Playlist = {
             name: "Liked Songs",
-            image: "/W/music/images/liked-songs.webp",
+            image: "/images/liked-songs.webp",
             tracks: [],
           };
           const updated = [...playlists, newPL];
