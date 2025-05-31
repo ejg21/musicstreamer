@@ -30,7 +30,7 @@ export default function SplashScreen() {
       {/* Fullscreen Blurred Background (Desktop Only) */}
       <div className="absolute inset-0 hidden md:block">
         <Image
-          src="/images/OctaveBanner.png" // Replace with your banner image
+          src="/W/music/images/OctaveBanner.png" // Replace with your banner image
           alt="Background Overlay"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
