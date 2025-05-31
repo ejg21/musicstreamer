@@ -2,8 +2,8 @@
   "name": "Octave Streaming - Stream Your Favorite Tunes",
   "short_name": "Octave",
   "description": "Your ultimate music streaming companion",
-  "start_url": "/W/music/?utm_source=pwa",
-  "scope": "/W/music/",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
   "splash_pages": null,
   "launch_handler": {
     "client_mode": ["navigate-existing", "auto"]
