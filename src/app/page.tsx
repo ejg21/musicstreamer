@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     siteName: "Octave Streaming",
     images: [
       {
-        url: "/images/OctaveBanner.png",
+        url: "/W/music/images/OctaveBanner.png",
         width: 1200,
         height: 630,
         alt: "Octave Streaming Banner",
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: "/images/black_logo.png",
-    shortcut: "/images/black_logo.png",
-    apple: "/images/black_logo.png",
+    icon: "/W/music/images/black_logo.png",
+    shortcut: "/W/music/images/black_logo.png",
+    apple: "/W/music/images/black_logo.png",
   },
 };
 
