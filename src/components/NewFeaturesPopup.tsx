@@ -12,7 +12,7 @@ const NewFeaturesPopup = () => {
   }, []);
 
   const handleClose = () => {
-    const FEATURE_VERSION = "v1";
+    const FEATURE_VERSION = "v1.1";
     localStorage.setItem("seenNewFeatures", FEATURE_VERSION);
     setShowPopup(false);
   };
