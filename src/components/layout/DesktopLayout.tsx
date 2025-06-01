@@ -35,9 +35,8 @@ import TrackItem from "../common/TrackItem";
 import CustomContextMenu from "../common/CustomContextMenu";
 
 // Room Stuff
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRoom } from "@/lib/useRoom";
-const { startRoom } = useRoom();
 
 // Types
 import type { Track, Playlist } from "@/lib/types/types";
@@ -148,6 +147,35 @@ interface DesktopLayoutProps {
   children?: ReactNode;
 }
 
+const StartRoomButton = ({ playlistName }: { playlistName: string }) => {
+  const [code] = useState(() =>
+    Math.random().toString(36).substring(2, 8).toUpperCase()
+  );
+  const streamRef = useRef<MediaStream | null>(null);
+  const { startRoom } = useRoom({
+    roomId: code,
+    isHost: true,
+    stream: streamRef.current!,
+  });
+
+  const handleStart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+    startRoom();
+    alert(`Room started for playlist “${playlistName}”: ${code}`);
+  };
+
+  return (
+    <button
+      onClick={handleStart}
+      title="Start Room"
+      className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded-tr-md rounded-bl-md z-10"
+    >
+      📡
+    </button>
+  );
+};
+
 /* =================================
  1. SIDEBAR COMPONENT
 ================================= */
@@ -182,28 +210,21 @@ const Sidebar: React.FC<{
   setShowContextMenu,
 }) => {
   return (
-    <aside
-      className={cn(
-        "relative h-full bg-gradient-to-b from-gray-900/95 to-black/95",
-        "transition-all duration-300 ease-in-out rounded-xl shadow-xl",
-        "border border-white/[0.02] backdrop-blur-xl",
-        sidebarCollapsed ? "w-[72px]" : "w-[280px]"
-      )}
-    >
-      {/* Collapse/Expand Toggle */}
-      <button
-        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-        className={cn(
-          "absolute -right-2.5 top-6 w-5 h-10 flex items-center justify-center",
-          "bg-white/[0.03] rounded-full border border-white/[0.02]",
-          "hover:bg-white/[0.06] transition-all duration-200 backdrop-blur-xl"
-        )}
-      >
-        {sidebarCollapsed ? (
-          <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-        ) : (
-          <ChevronLeft className="w-3.5 h-3.5 text-gray-400" />
-        )}
+    <aside className={cn(
+      "relative h-full bg-gradient-to-b from-gray-900/95 to-black/95",
+      "transition-all duration-300 ease-in-out rounded-xl shadow-xl",
+      "border border-white/[0.02] backdrop-blur-xl",
+      sidebarCollapsed ? "w-[72px]" : "w-[280px]"
+    )}>
+      {/* Collapse Toggle */}
+      <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className={cn(
+        "absolute -right-2.5 top-6 w-5 h-10 flex items-center justify-center",
+        "bg-white/[0.03] rounded-full border border-white/[0.02]",
+        "hover:bg-white/[0.06] transition-all duration-200 backdrop-blur-xl"
+      )}>
+        {sidebarCollapsed
+          ? <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+          : <ChevronLeft className="w-3.5 h-3.5 text-gray-400" />}
       </button>
 
       {/* Navigation */}
@@ -225,20 +246,9 @@ const Sidebar: React.FC<{
                   isActive && "bg-white/[0.08]"
                 )}
               >
-                <item.icon
-                  className={cn(
-                    "w-5 h-5",
-                    isActive ? "text-white" : "text-gray-400",
-                    "transition-colors"
-                  )}
-                />
+                <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-gray-400")} />
                 {!sidebarCollapsed && (
-                  <span
-                    className={cn(
-                      "ml-3 text-sm font-medium",
-                      isActive ? "text-white" : "text-gray-400"
-                    )}
-                  >
+                  <span className={cn("ml-3 text-sm font-medium", isActive ? "text-white" : "text-gray-400")}>
                     {item.label}
                   </span>
                 )}
@@ -249,20 +259,13 @@ const Sidebar: React.FC<{
 
         <div className="h-px bg-white/[0.04] mx-3" />
 
-        {/* Your Library */}
+        {/* Library Section */}
         <div className="flex flex-col flex-1 min-h-0 p-3">
           <div className="flex items-center justify-between mb-4">
-            <div
-              className={cn(
-                "flex items-center gap-3",
-                sidebarCollapsed && "mx-auto"
-              )}
-            >
+            <div className={cn("flex items-center gap-3", sidebarCollapsed && "mx-auto")}>
               <Library className="w-5 h-5 text-gray-400" />
               {!sidebarCollapsed && (
-                <span className="text-sm font-medium text-gray-400">
-                  Your Library
-                </span>
+                <span className="text-sm font-medium text-gray-400">Your Library</span>
               )}
             </div>
             {!sidebarCollapsed && (
@@ -275,7 +278,7 @@ const Sidebar: React.FC<{
             )}
           </div>
 
-          {/* Playlists */}
+          {/* Playlist List */}
           <div className="overflow-y-auto flex-1 pr-1 -mr-1 custom-scrollbar">
             <div className="space-y-1">
               {playlists.map((pl) => (
@@ -298,21 +301,7 @@ const Sidebar: React.FC<{
                       className="rounded-md object-cover"
                       priority
                     />
-                    {!sidebarCollapsed && (
-                      <button
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                          const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-                          startRoom({ roomId: code, stream });
-                          alert(`Room started for playlist “${pl.name}”: ${code}`);
-                        }}
-                        title="Start Room"
-                        className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded-tr-md rounded-bl-md z-10"
-                      >
-                        📡
-                      </button>
-                    )}
+                    {!sidebarCollapsed && <StartRoomButton playlistName={pl.name} />}
                     {pl.downloaded && (
                       <div className="absolute -top-1 -right-1 bg-green-500/90 rounded-full p-0.5">
                         <Download className="w-2.5 h-2.5 text-white" />
@@ -323,48 +312,32 @@ const Sidebar: React.FC<{
                   {!sidebarCollapsed && (
                     <>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-gray-200 truncate">
-                          {pl.name}
-                        </h3>
-                        <p className="text-xs text-gray-500 truncate">
-                          {pl.tracks.length} tracks
-                        </p>
+                        <h3 className="text-sm font-medium text-gray-200 truncate">{pl.name}</h3>
+                        <p className="text-xs text-gray-500 truncate">{pl.tracks.length} tracks</p>
                       </div>
-
                       <button
                         className="opacity-0 group-hover:opacity-100 p-1.5 rounded-full hover:bg-white/[0.08] transition-all"
                         onClick={(e) => {
                           e.stopPropagation();
                           const options: ContextMenuOption[] = [
                             {
-                              label: pl.pinned
-                                ? "Unpin Playlist"
-                                : "Pin Playlist",
+                              label: pl.pinned ? "Unpin Playlist" : "Pin Playlist",
                               action: () => {
                                 const updated = playlists.map((p) =>
-                                  p.name === pl.name
-                                    ? { ...p, pinned: !p.pinned }
-                                    : p
+                                  p.name === pl.name ? { ...p, pinned: !p.pinned } : p
                                 );
                                 setPlaylists(updated);
-                                void Promise.all(
-                                  updated.map((item) => storePlaylist(item))
-                                );
+                                void Promise.all(updated.map(storePlaylist));
                               },
                             },
                             {
                               label: "Delete Playlist",
                               action: () => {
-                                void deletePlaylistByName(pl.name).then(
-                                  setPlaylists
-                                );
+                                void deletePlaylistByName(pl.name).then(setPlaylists);
                               },
                             },
                           ];
-                          setContextMenuPosition({
-                            x: e.clientX,
-                            y: e.clientY,
-                          });
+                          setContextMenuPosition({ x: e.clientX, y: e.clientY });
                           setContextMenuOptions(options);
                           setShowContextMenu(true);
                         }}

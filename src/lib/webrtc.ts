@@ -4,7 +4,7 @@ import { io, Socket } from "socket.io-client";
 
 export interface RoomContext {
   socket: Socket;
-  peers: Record<string, Peer.Instance>;
+  peers: Record<string, Peer>;
   roomId: string;
   isHost: boolean;
 }
@@ -21,7 +21,7 @@ export function joinRoom({
   onRemoteStream?: (stream: MediaStream) => void;
 }): RoomContext {
   const socket = io("https://musicsocketserver.onrender.com");
-  const peers: Record<string, Peer.Instance> = {};
+  const peers: Record<string, Peer> = {};
 
   socket.emit("join-room", roomId);
 

@@ -15,7 +15,7 @@ export function useRoom({ roomId, isHost, stream }: UseRoomOptions) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    const { socket, peers } = joinRoom({
+    const { socket } = joinRoom({
       roomId,
       isHost,
       stream,
@@ -64,6 +64,11 @@ export function useRoom({ roomId, isHost, stream }: UseRoomOptions) {
     socket.emit("request-track", trackId);
   };
 
+  const startRoom = () => {
+    if (!socket) return;
+    socket.emit("room:start", roomId);
+  };
+
   return {
     currentTrack,
     currentTime,
@@ -72,5 +77,6 @@ export function useRoom({ roomId, isHost, stream }: UseRoomOptions) {
     addToQueue,
     audioRef,
     isHost,
+    startRoom,
   };
 }
