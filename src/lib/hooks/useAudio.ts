@@ -251,9 +251,7 @@ async (
         }
       }
       
-      if (!ac.signal.aborted) {
-        storeTrackBlob(lowKey, lowBlob).catch(()=>{});
-      }
+      if (lowBlob) storeTrackBlob(lowKey, lowBlob).catch(() => {});
     }
 
     // Another abort check before playing
