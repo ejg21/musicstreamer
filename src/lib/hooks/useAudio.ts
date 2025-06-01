@@ -16,22 +16,18 @@ async function getSaavnFallbackUrl(trackId: string): Promise<string | null> {
     const deezerRes = await fetch(`https://scrape2-ruddy.vercel.app/api/scrape?url=https://api.deezer.com/track/${trackId}`);
     if (!deezerRes.ok) throw new Error("Deezer metadata fetch failed");
     const deezerData = await deezerRes.json();
-    const title = deezerData?.title;
-    const artist = deezerData?.artist?.name;
+    const title = encodeURIComponent(deezerData.content?.title ?? "");
+    const artist = encodeURIComponent(deezerData.content?.artist?.name ?? "");
 
-    if (!title || !artist) {
-      throw new Error("Missing title or artist in Deezer data");
-    }
+    if (!title || !artist) throw new Error("Missing title or artist in Deezer data");
 
-    const query = encodeURIComponent(`${title} ${artist}`);
-
-    const searchRes = await fetch(`https://jiosaavn-api-privatecvc2.vercel.app/search/songs?query=${query}&limit=5&page=1`);
+    const searchRes = await fetch(`https://jiosaavn-api-privatecvc2.vercel.app/search/songs?query=${title}+${artist}&limit=5&page=1`);
     if (!searchRes.ok) throw new Error("Saavn search failed");
     const searchData = await searchRes.json();
 
     const result = searchData?.data?.results?.find((item: any) =>
-      item.name?.toLowerCase() === deezerData.title.toLowerCase() &&
-      item.primaryArtists?.toLowerCase().includes(deezerData.artist?.name.toLowerCase())
+      item.name?.toLowerCase() === (deezerData.content?.title ?? "").toLowerCase() &&
+      item.primaryArtists?.toLowerCase().includes((deezerData.content?.artist?.name ?? "").toLowerCase())
     );
 
     if (!result || !result.downloadUrl?.length) return null;
