@@ -11,6 +11,33 @@ import {
 import audioElement from "../managers/audioManager";
 import { Track } from "../types/types";
 
+async function getSaavnFallbackUrl(trackId: string): Promise<string | null> {
+  try {
+    const deezerRes = await fetch(`https://api.deezer.com/track/${trackId}`);
+    if (!deezerRes.ok) throw new Error("Deezer metadata fetch failed");
+    const deezerData = await deezerRes.json();
+    const title = encodeURIComponent(deezerData.title);
+    const artist = encodeURIComponent(deezerData.artist?.name || "");
+
+    const searchRes = await fetch(`https://jiosaavn-api-privatecvc2.vercel.app/search/songs?query=${title}+${artist}&limit=5&page=1`);
+    if (!searchRes.ok) throw new Error("Saavn search failed");
+    const searchData = await searchRes.json();
+
+    const result = searchData?.data?.results?.find((item: any) =>
+      item.name?.toLowerCase() === deezerData.title.toLowerCase() &&
+      item.primaryArtists?.toLowerCase().includes(deezerData.artist?.name.toLowerCase())
+    );
+
+    if (!result || !result.downloadUrl?.length) return null;
+
+    const best = result.downloadUrl.findLast((d: any) => d.link);
+    return best?.link || null;
+  } catch (e) {
+    console.warn("Saavn fallback failed:", e);
+    return null;
+  }
+}
+
 /* ─────────────────────────── URLs ──────────────────────────────── */
 export function getTrackUrl(id: string, q: string): string {
   switch (q) {
@@ -208,8 +235,17 @@ async (
         if (!ac.signal.aborted) {
           bumpFailure();
           checkAborted();
-          const r = await getWithRetry(getFallbackUrl(track.id), ac.signal);
-          lowBlob = await r.blob();
+          try {
+            const r = await getWithRetry(getFallbackUrl(track.id), ac.signal);
+            lowBlob = await r.blob();
+          } catch {
+            // Final fallback via Saavn
+            const saavnUrl = await getSaavnFallbackUrl(track.id);
+            if (saavnUrl) {
+              const r = await getWithRetry(saavnUrl, ac.signal);
+              lowBlob = await r.blob();
+            }
+          }
         } else {
           throw err; // Re-throw abort errors
         }
@@ -371,4 +407,3 @@ async (
     setLoop
   };
 }
-
