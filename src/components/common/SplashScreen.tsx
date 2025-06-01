@@ -48,7 +48,7 @@ export default function SplashScreen() {
         {/* Mobile-Only Banner */}
         <div className="relative w-64 h-32 md:hidden">
           <Image
-            src="W/music/images/OctaveBanner.png"
+            src="/W/music/images/OctaveBanner.png"
             alt="Octave"
             fill
             priority
