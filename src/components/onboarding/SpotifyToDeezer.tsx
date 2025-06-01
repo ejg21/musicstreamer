@@ -3,8 +3,8 @@ import Image from "next/image";
 import { ArrowRight, Loader2, Music2 } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { storePlaylist } from "@/lib/managers/idbWrapper"; 
-import { Playlist, Track } from "@/lib/types/types"; 
+import { storePlaylist } from "@/lib/managers/idbWrapper";
+import { Playlist, Track } from "@/lib/types/types";
 
 // Types
 interface DeezerTrack {
@@ -34,7 +34,20 @@ interface ConvertedPlaylist {
   tracks: DeezerTrack[];
 }
 
+/* Original API endpoint
 const API_BASE_URL = "https://api.octave.gold/api/convertPlaylist";
+
+async function convertSpotifyToOctave(playlistUrl: string): Promise<ConvertedPlaylist> {
+  const response = await fetch(`${API_BASE_URL}?url=${encodeURIComponent(playlistUrl)}`);
+  if (!response.ok) {
+    throw new Error("Failed to convert playlist");
+  }
+  return response.json();
+}
+*/
+
+// const API_BASE_URL = "/api/convertPlaylist";
+const API_BASE_URL = "https://logsystem.vercel.app/api/convertPlaylist";
 
 async function convertSpotifyToOctave(playlistUrl: string): Promise<ConvertedPlaylist> {
   const response = await fetch(`${API_BASE_URL}?url=${encodeURIComponent(playlistUrl)}`);
@@ -79,7 +92,7 @@ export const SpotifyToDeezer: React.FC<SpotifyToDeezerProps> = ({ onClose, onPla
     try {
       const octavePlaylist: Playlist = {
         name: convertedPlaylist.playlist_name || "Imported Spotify Playlist",
-        image: convertedPlaylist.tracks[0]?.album.cover_xl || "/images/defaultPlaylistImage.png",
+        image: convertedPlaylist.tracks[0]?.album.cover_xl || "/W/music/images/defaultPlaylistImage.png",
         tracks: convertedPlaylist.tracks.map((track): Track => ({
           id: track.id.toString(),
           title: track.title,
@@ -146,7 +159,7 @@ export const SpotifyToDeezer: React.FC<SpotifyToDeezerProps> = ({ onClose, onPla
           <div className="space-y-6">
             <div className="relative aspect-video rounded-lg overflow-hidden">
             <Image
-              src={convertedPlaylist.tracks[0]?.album.cover_xl || "/images/defaultPlaylistImage.png"}
+              src={convertedPlaylist.tracks[0]?.album.cover_xl || "/W/music/images/defaultPlaylistImage.png"}
               alt={convertedPlaylist.playlist_name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -162,8 +175,8 @@ export const SpotifyToDeezer: React.FC<SpotifyToDeezerProps> = ({ onClose, onPla
 
             <div className="max-h-[300px] overflow-y-auto space-y-2 custom-scrollbar">
               {convertedPlaylist.tracks.map((track) => (
-                <div 
-                  key={track.id} 
+                <div
+                  key={track.id}
                   className="flex items-center space-x-3 p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
                 >
                   <Image
