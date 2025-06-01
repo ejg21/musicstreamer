@@ -226,13 +226,19 @@ async (
       try {
         checkAborted();
         const r = await fetch(getFallbackUrl(track.id), { cache: "no-store", signal: ac.signal });
+        if (!r.ok) throw new Error("Octave fallback failed");
         lowBlob = await r.blob();
-      } catch {
-        // Final fallback via Saavn
-        const saavnUrl = await getSaavnFallbackUrl(track.id);
-        if (saavnUrl) {
-          const r = await getWithRetry(saavnUrl, ac.signal);
-          lowBlob = await r.blob();
+      } catch (e) {
+        console.warn("Octave fetch failed:", e);
+        try {
+          const saavnUrl = await getSaavnFallbackUrl(track.id);
+          if (saavnUrl) {
+            const r = await getWithRetry(saavnUrl, ac.signal);
+            if (!r.ok) throw new Error("Saavn fetch failed");
+            lowBlob = await r.blob();
+          }
+        } catch (se) {
+          console.warn("Saavn fallback failed:", se);
         }
       }
 
