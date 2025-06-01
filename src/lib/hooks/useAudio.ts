@@ -16,10 +16,16 @@ async function getSaavnFallbackUrl(trackId: string): Promise<string | null> {
     const deezerRes = await fetch(`https://scrape2-ruddy.vercel.app/api/scrape?url=https://api.deezer.com/track/${trackId}`);
     if (!deezerRes.ok) throw new Error("Deezer metadata fetch failed");
     const deezerData = await deezerRes.json();
-    const title = encodeURIComponent(deezerData.title);
-    const artist = encodeURIComponent(deezerData.artist?.name || "");
+    const title = deezerData?.title;
+    const artist = deezerData?.artist?.name;
 
-    const searchRes = await fetch(`https://jiosaavn-api-privatecvc2.vercel.app/search/songs?query=${title}+${artist}&limit=5&page=1`);
+    if (!title || !artist) {
+      throw new Error("Missing title or artist in Deezer data");
+    }
+
+    const query = encodeURIComponent(`${title} ${artist}`);
+
+    const searchRes = await fetch(`https://jiosaavn-api-privatecvc2.vercel.app/search/songs?query=${query}&limit=5&page=1`);
     if (!searchRes.ok) throw new Error("Saavn search failed");
     const searchData = await searchRes.json();
 
