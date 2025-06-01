@@ -259,6 +259,7 @@ async (
 
     /* play low quality */
     const prev = audioElement.src;
+    if (!lowBlob) throw new Error("Low quality blob is undefined");
     audioElement.src = URL.createObjectURL(lowBlob);
     if (prev.startsWith("blob:")) URL.revokeObjectURL(prev);
     audioElement.currentTime = startAt;
