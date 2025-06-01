@@ -4,7 +4,7 @@ const NewFeaturesPopup = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    const FEATURE_VERSION = "v1";
+    const FEATURE_VERSION = "v1.1";
     const hasSeenPopup = localStorage.getItem("seenNewFeatures") === FEATURE_VERSION;
     if (!hasSeenPopup) {
       setShowPopup(true);
