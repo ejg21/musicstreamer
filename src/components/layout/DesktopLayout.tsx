@@ -285,7 +285,7 @@ const Sidebar: React.FC<{
                 >
                   <div className="relative flex-shrink-0">
                     <Image
-                      src={pl.image || "/images/defaultPlaylistImage.png"}
+                      src={pl.image || "/W/music/images/defaultPlaylistImage.png"}
                       alt={pl.name}
                       width={sidebarCollapsed ? 40 : 44}
                       height={sidebarCollapsed ? 40 : 44}
@@ -725,7 +725,7 @@ function PlaylistView({
       <div className="h-[45vh] relative rounded-xl mb-8">
         <div className="absolute inset-0">
           <Image
-            src={currentPlaylist.image || "/images/defaultPlaylistImage.png"}
+            src={currentPlaylist.image || "/W/music/images/defaultPlaylistImage.png"}
             alt={currentPlaylist.name}
             fill
             className="object-cover"
@@ -738,7 +738,7 @@ function PlaylistView({
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end gap-6">
               <Image
-                src={currentPlaylist.image || "/images/defaultPlaylistImage.png"}
+                src={currentPlaylist.image || "/W/music/images/defaultPlaylistImage.png"}
                 alt={currentPlaylist.name}
                 width={180}
                 height={180}
@@ -874,7 +874,7 @@ function PlaylistView({
                     <Image
                       src={
                         track.album.cover_small ||
-                        "/images/defaultSongImage.png"
+                        "/W/music/images/defaultSongImage.png"
                       }
                       alt={track.title}
                       width={48}
@@ -1183,7 +1183,7 @@ function HomeView({
                 )}
               >
                 <Image
-                  src={pl.image || "/images/defaultPlaylistImage.png"}
+                  src={pl.image || "/W/music/images/defaultPlaylistImage.png"}
                   alt={pl.name}
                   width={64}
                   height={64}
@@ -1221,7 +1221,7 @@ function HomeView({
             <div key={i} className="group relative flex flex-col">
               <div className="relative aspect-square w-full overflow-hidden rounded-xl">
                 <Image
-                  src={track.album.cover_medium || "/images/defaultSongImage.png"}
+                  src={track.album.cover_medium || "/W/music/images/defaultSongImage.png"}
                   alt={track.title}
                   fill
                   priority
