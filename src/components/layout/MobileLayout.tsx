@@ -523,7 +523,7 @@ const PlaylistView: React.FC<{
       <div className="relative h-[40vh] overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src={currentPlaylist.image || "/images/defaultPlaylistImage.png"}
+            src={currentPlaylist.image || "/W/music/images/defaultPlaylistImage.png"}
             alt={currentPlaylist.name || "default playlist error alt"}
             className="w-full h-full object-cover"
             fill
@@ -759,7 +759,7 @@ const LibraryView: React.FC<{
             style={{ userSelect: "none" }}
           >
             <Image
-              src={playlist.image || "/images/defaultPlaylistImage.png"}
+              src={playlist.image || "/W/music/images/defaultPlaylistImage.png"}
               alt={playlist.name || "Playlist Cover"}
               className={cn(
                 "rounded",
@@ -861,7 +861,7 @@ const HomeView: React.FC<{
               className="flex items-center space-x-3 bg-gray-800 bg-opacity-40 rounded-md p-2 cursor-pointer hover:bg-gray-600 transition-colors duration-200"
             >
               <Image
-                src={pl.image || "/images/defaultPlaylistImage.png"}
+                src={pl.image || "/W/music/images/defaultPlaylistImage.png"}
                 alt={pl.name || "Playlist Cover"}
                 className="w-10 h-10 rounded-md"
                 width={40}
@@ -921,7 +921,7 @@ const HomeView: React.FC<{
                     <Image
                       src={
                         track.album.cover_medium ||
-                        "/images/defaultPlaylistImage.png"
+                        "/W/music/images/defaultPlaylistImage.png"
                       }
                       alt={track.title || "Album Cover"}
                       className={cn(
