@@ -13,7 +13,7 @@ import { Track } from "../types/types";
 
 async function getSaavnFallbackUrl(trackId: string): Promise<string | null> {
   try {
-    const deezerRes = await fetch(`https://api.deezer.com/track/${trackId}`);
+    const deezerRes = await fetch(`https://scrape2-ruddy.vercel.app/api/scrape?url=https://api.deezer.com/track/${trackId}`);
     if (!deezerRes.ok) throw new Error("Deezer metadata fetch failed");
     const deezerData = await deezerRes.json();
     const title = encodeURIComponent(deezerData.title);
