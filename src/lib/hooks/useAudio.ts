@@ -214,8 +214,7 @@ async (
     }
   };
 
-  const wanted: "MAX"|"HIGH"|"NORMAL"|"DATA_SAVER" =
-    isDataSaver ? "DATA_SAVER" : (qualityOverride || audioQuality);
+  const wanted = "DATA_SAVER"; // always attempt fallback quality
 
   try {
     /* ---- LOW quality first ------------------------------------ */
@@ -224,35 +223,19 @@ async (
     let lowBlob = !forceFetch ? await getOfflineBlob(lowKey) : null;
 
     if (!lowBlob) {
-      const url = workerAllowed()
-        ? getTrackUrl(track.id, "DATA_SAVER")
-        : getFallbackUrl(track.id);
       try {
         checkAborted();
-        const r = await getWithRetry(url, ac.signal);
-        resetFailures();
+        const r = await getWithRetry(getFallbackUrl(track.id), ac.signal);
         lowBlob = await r.blob();
-      } catch (err) {
-        // Make sure it's not an abort error before bumping failure
-        if (!ac.signal.aborted) {
-          bumpFailure();
-          checkAborted();
-          try {
-            const r = await getWithRetry(getFallbackUrl(track.id), ac.signal);
-            lowBlob = await r.blob();
-          } catch {
-            // Final fallback via Saavn
-            const saavnUrl = await getSaavnFallbackUrl(track.id);
-            if (saavnUrl) {
-              const r = await getWithRetry(saavnUrl, ac.signal);
-              lowBlob = await r.blob();
-            }
-          }
-        } else {
-          throw err; // Re-throw abort errors
+      } catch {
+        // Final fallback via Saavn
+        const saavnUrl = await getSaavnFallbackUrl(track.id);
+        if (saavnUrl) {
+          const r = await getWithRetry(saavnUrl, ac.signal);
+          lowBlob = await r.blob();
         }
       }
-      
+
       if (lowBlob) storeTrackBlob(lowKey, lowBlob).catch(() => {});
     }
 
@@ -267,75 +250,8 @@ async (
     audioElement.currentTime = startAt;
     if (autoPlay && userGesture) await audioElement.play().catch(()=>{});
 
-    if (wanted === "DATA_SAVER") return;
+    // Removed background upgrade block as per instructions
 
-    /* ---- background upgrade ----------------------------------- */
-    (async () => {
-      try {
-        const hiKey = `${track.id}_${wanted}`;
-        let hiBlob = !forceFetch ? await getOfflineBlob(hiKey) : null;
-
-        if (!hiBlob) {
-          /* ── try Deezer-Worker once (with small retry loop) ── */
-          const url = workerAllowed()
-            ? getTrackUrl(track.id, wanted)
-            : null;                       // worker disabled => skip upgrade
-
-          if (!url) return;               // stick with 128 kb/s
-
-          try {
-            // Check if we've been aborted before making network requests
-            if (ac.signal.aborted) return;
-            
-            const r = await getWithRetry(url, ac.signal, 3); // same util, 3 attempts
-            resetFailures();
-            hiBlob = await r.blob();
-            
-            // Check if we've been aborted before storing
-            if (ac.signal.aborted) return;
-            
-            storeTrackBlob(hiKey, hiBlob).catch(() => {});
-          } catch (err) {
-            // Only bump failures if it's not an abort
-            if (!ac.signal.aborted) {
-              bumpFailure();                // count the failure but DO NOT fallback
-              console.warn(`no ${wanted} available from Worker – staying on 128`, err);
-            }
-            return;                       // quit upgrade silently
-          }
-        }
-
-        if (ac.signal.aborted) return;
-
-        /* ── switch (MSE first, plain swap fallback) ─────────────────── */
-        const mime =
-          wanted === "MAX"  ? "audio/flac" :
-          wanted === "HIGH" ? 'audio/ogg; codecs="opus"' :
-                              "audio/mpeg";
-
-        // Make sure we're still playing the same track before swapping
-        // This is the key part - confirm we haven't navigated away
-        if (audioElement.src && audioElement.src.includes(track.id)) {
-          const wasPlaying = !audioElement.paused;
-          const resumeAt   = audioElement.currentTime;
-
-          try {
-            await streamViaMSE(audioElement, mime, hiBlob, resumeAt, wasPlaying);
-          } catch (err) {
-            // Check again that we're still on the same track
-            if (!ac.signal.aborted && audioElement.src && audioElement.src.includes(track.id)) {
-              const old = audioElement.src;
-              audioElement.src = URL.createObjectURL(hiBlob);
-              audioElement.currentTime = resumeAt;
-              if (wasPlaying) await audioElement.play().catch(() => {});
-              if (old.startsWith("blob:")) URL.revokeObjectURL(old);
-            }
-          }
-        }
-      } catch (err) {
-        if (!ac.signal.aborted) console.warn("upgrade failed:", err);
-      }
-    })();
   } catch (err) {
     // Only log non-abort errors
     if (!ac.signal.aborted) {
