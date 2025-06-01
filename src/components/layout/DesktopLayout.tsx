@@ -34,6 +34,10 @@ import { cn } from "@/lib/utils/utils";
 import TrackItem from "../common/TrackItem";
 import CustomContextMenu from "../common/CustomContextMenu";
 
+// Room Stuff
+import { useState } from "react";
+import { useRoom } from "@/lib/useRoom";
+
 // Types
 import type { Track, Playlist } from "@/lib/types/types";
 
@@ -292,6 +296,21 @@ const Sidebar: React.FC<{
                       className="rounded-md object-cover"
                       priority
                     />
+                    {!sidebarCollapsed && (
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                          const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+                          useRoom({ roomId: code, isHost: true, stream });
+                          alert(`Room started for playlist “${pl.name}”: ${code}`);
+                        }}
+                        title="Start Room"
+                        className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded-tr-md rounded-bl-md z-10"
+                      >
+                        📡
+                      </button>
+                    )}
                     {pl.downloaded && (
                       <div className="absolute -top-1 -right-1 bg-green-500/90 rounded-full p-0.5">
                         <Download className="w-2.5 h-2.5 text-white" />
