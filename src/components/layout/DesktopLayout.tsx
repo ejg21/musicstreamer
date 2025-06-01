@@ -37,6 +37,7 @@ import CustomContextMenu from "../common/CustomContextMenu";
 // Room Stuff
 import { useState } from "react";
 import { useRoom } from "@/lib/useRoom";
+const { startRoom } = useRoom();
 
 // Types
 import type { Track, Playlist } from "@/lib/types/types";
