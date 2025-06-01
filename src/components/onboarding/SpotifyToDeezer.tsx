@@ -123,6 +123,9 @@ export const SpotifyToDeezer: React.FC<SpotifyToDeezerProps> = ({ onClose, onPla
         <div className="text-3xl font-bold text-center mb-8 text-white bg-clip-text">
           Spotify to Octave Conversion
         </div>
+        <p className="text-center text-gray-300 mb-6 text-sm max-w-xl mx-auto">
+          Go to your Spotify Playlist, click the three dots, make it public, and then go to share and copy link to playlist.
+        </p>
 
         {!convertedPlaylist ? (
           <div className="text-center py-12">
