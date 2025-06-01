@@ -26,6 +26,7 @@ const NewFeaturesPopup = () => {
         <ul className="list-disc pl-5 space-y-1">
           <li>Reengeneered Spotify Playlist Import Added in Settings</li>
           <li>Improved loading of certain images such as liked songs playlist icon.</li>
+          <li>Added new streaming API due to the first one seemingly being broken (???)</li>
         </ul>
         <button
           onClick={handleClose}

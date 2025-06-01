@@ -225,7 +225,7 @@ async (
     if (!lowBlob) {
       try {
         checkAborted();
-        const r = await getWithRetry(getFallbackUrl(track.id), ac.signal);
+        const r = await fetch(getFallbackUrl(track.id), { cache: "no-store", signal: ac.signal });
         lowBlob = await r.blob();
       } catch {
         // Final fallback via Saavn
