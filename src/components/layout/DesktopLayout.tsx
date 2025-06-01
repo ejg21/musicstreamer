@@ -148,8 +148,9 @@ interface DesktopLayoutProps {
 }
 
 /* =================================
-   1. SIDEBAR COMPONENT
-   ================================= */
+ 1. SIDEBAR COMPONENT
+================================= */
+
 const Sidebar: React.FC<{
   sidebarCollapsed: boolean;
   setSidebarCollapsed: (v: boolean) => void;
@@ -302,7 +303,7 @@ const Sidebar: React.FC<{
                           e.stopPropagation();
                           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                           const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-                          useRoom({ roomId: code, isHost: true, stream });
+                          startRoom({ roomId: code, stream });
                           alert(`Room started for playlist “${pl.name}”: ${code}`);
                         }}
                         title="Start Room"
