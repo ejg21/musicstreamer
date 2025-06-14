@@ -58,6 +58,7 @@ export default function SplashScreen() {
         </div>
 
         <div className="text-gray-400">Credit to Octave - Further Developed by Me</div>
+        <div className="text-gray-500 text-sm italic mt-2">cuz if they wanna block yt music we improvise</div>
       </div>
     </div>
   );
