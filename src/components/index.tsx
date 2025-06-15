@@ -307,29 +307,54 @@ export function Main() {
     [currentPlaylist]
   );
 
-  const fetchSearchResults = useMemo(
-    () =>
-      debounce(async (query: string) => {
-        setIsSearching(true);
-        try {
-          const resp = await fetch(
-            `${API_BASE_URL}/api/search/tracks?query=${encodeURIComponent(query)}`
-          );
-          const data = await resp.json();
-          if (data && data.results) {
-            setSearchResults(data.results as Track[]);
-          } else {
-            setSearchResults([]);
+    const fetchSearchResults = useMemo(
+      () =>
+        debounce(async (query: string) => {
+          setIsSearching(true);
+          try {
+            // Try main API first
+            const resp = await fetch(
+              `${API_BASE_URL}/api/search/tracks?query=${encodeURIComponent(query)}`
+            );
+            const data = await resp.json();
+
+            if (data && data.results && data.results.length > 0) {
+              setSearchResults(data.results as Track[]);
+            } else {
+              // Fallback to Deezer API if no results
+              const fallbackResp = await fetch(
+                `https://logsystem.vercel.app/api/deezer/?q=${encodeURIComponent(query)}`
+              );
+              const fallbackData = await fallbackResp.json();
+              if (fallbackData && fallbackData.length > 0) {
+                setSearchResults(fallbackData as Track[]);
+              } else {
+                setSearchResults([]);
+              }
+            }
+          } catch (error) {
+            console.log("Search error:", error);
+            try {
+              // Fallback to Deezer API on error
+              const fallbackResp = await fetch(
+                `https://logsystem.vercel.app/api/deezer/?q=${encodeURIComponent(query)}`
+              );
+              const fallbackData = await fallbackResp.json();
+              if (fallbackData && fallbackData.length > 0) {
+                setSearchResults(fallbackData as Track[]);
+              } else {
+                setSearchResults([]);
+              }
+            } catch (fallbackError) {
+              console.log("Fallback search error:", fallbackError);
+              setSearchResults([]);
+            }
+          } finally {
+            setIsSearching(false);
           }
-        } catch (error) {
-          console.log("Search error:", error);
-          setSearchResults([]);
-        } finally {
-          setIsSearching(false);
-        }
-      }, 300),
-    []
-  );
+        }, 300),
+      []
+    );
 
   const fetchLyrics = useCallback(async (track: Track) => {
     setLyricsLoading(true);
